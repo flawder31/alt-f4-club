@@ -1,0 +1,41 @@
+/* frontend/src/components/UserList.module.css */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item {
+    padding: 12px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon {
+    font-size: 1.2rem;
+}
+
+.info {
+    flex: 1;
+}
+
+.email {
+    font-weight: bold;
+}
+
+.name {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.message {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
