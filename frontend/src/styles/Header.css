@@ -1,0 +1,169 @@
+.header {
+  background-color: var(--primary-color);
+  height: 80px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  max-width: 1442px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 43px;
+  gap: 57px;
+}
+
+.group {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  text-decoration: none;
+  min-width: 230px;
+}
+
+.logo-img {
+  width: 69px;
+  height: 59px;
+  object-fit: cover;
+}
+
+.logo-text {
+  color: var(--text-main);
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.navigation {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  flex: 1;
+}
+
+.nav-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--neon-blue)
+}
+
+.homepage {
+  width: 68px;
+}
+
+.price {
+  width: 60px;
+}
+
+.gallery {
+  width: 72px;
+}
+
+.login-btn {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 16px;
+  width: 68px;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  color: var(--neon-blue);
+}
+
+
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 0 20px;
+    gap: 30px;
+  }
+  
+  .navigation {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: auto;
+    min-height: 88px;
+  }
+  
+  .header-container {
+    flex-wrap: wrap;
+    padding: 15px 20px;
+  }
+  
+  .group {
+    min-width: auto;
+  }
+  
+  .navigation {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    height: auto;
+    min-height: 70px;
+  }
+  
+  .header-container {
+    padding: 10px 15px;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .group {
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .logo-img {
+    width: 50px;
+    height: 43px;
+  }
+  
+  .logo-text {
+    font-size: 12px;
+  }
+  
+  .navigation {
+    order: 3;
+    width: 100%;
+    gap: 20px;
+    justify-content: space-around;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-link {
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .homepage, .price, .gallery, .login-btn {
+    width: auto;
+    min-width: auto;
+  }
+  
+  .login-btn {
+    font-size: 14px;
+    padding: 5px 0;
+  }
+}

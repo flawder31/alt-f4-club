@@ -1,0 +1,153 @@
+.footer {
+  background-color: transparent;
+  padding: 20px 0;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 63px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  width: 335px;
+}
+
+.footer-logo-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.footer-logo {
+  width: 69px;
+  height: 59px;
+  object-fit: cover;
+  aspect-ratio: 1.17;
+}
+
+.footer-copyright {
+  color: var(--text-main);
+  font-size: 16px;
+  line-height: 1.4;
+  width: 264px;
+  margin-top: 5px;
+}
+
+.footer-contacts {
+  color: var(--text-main);
+  font-size: 16px;
+  line-height: 1.4;
+  width: 255px;
+  text-align: center;
+}
+
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 257px;
+}
+
+.footer-link {
+  color: var(--text-main);
+  font-size: 16px;
+  text-decoration: none;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.footer-link:hover {
+  color: var(--neon-blue);
+}
+
+
+@media (max-width: 1024px) {
+  .footer-container {
+    padding: 0 30px;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  
+  .footer-left,
+  .footer-copyright,
+  .footer-contacts,
+  .footer-right {
+    width: auto;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .footer-contacts {
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 30px 0;
+  }
+  
+  .footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+    padding: 0 20px;
+  }
+  
+  .footer-left,
+  .footer-copyright,
+  .footer-contacts,
+  .footer-right {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .footer-copyright {
+    margin-top: 0;
+  }
+  
+  .footer-contacts {
+    text-align: left;
+  }
+  
+  .footer-right {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px 30px;
+  }
+  
+  .footer-link {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    gap: 20px;
+  }
+  
+  .footer-logo {
+    width: 60px;
+    height: 51px;
+  }
+  
+  .footer-copyright,
+  .footer-contacts,
+  .footer-link {
+    font-size: 14px;
+  }
+  
+  .footer-right {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
