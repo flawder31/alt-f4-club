@@ -81,6 +81,132 @@
   color: var(--neon-blue);
 }
 
+/* Замените старый блок .user-dropdown на этот */
+
+.user-menu-container {
+  position: relative;
+}
+
+.user-name-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.user-name-btn:hover {
+  color: var(--neon-blue);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  min-width: 153px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--neon-blue);
+  border-radius: 3px;
+  z-index: 1001;
+  padding: 8px 0;
+  animation: dropdownFade 0.2s ease;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 17px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(29, 172, 255, 0.1);
+  color: var(--neon-blue);
+}
+
+/* Добавьте эти стили в конец файла */
+
+/* Баланс в меню */
+.dropdown-balance {
+  padding: 8px 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.balance-label {
+  color: #b9b9b9;
+}
+
+.balance-value {
+  color: var(--neon-blue);
+  font-weight: 600;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+  margin: 4px 0;
+  opacity: 0.5;
+}
+
+.logout-btn {
+  color: #ff4d4d;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .user-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-name-btn {
+    font-size: 14px;
+    padding: 5px 8px;
+  }
+  
+  .user-dropdown {
+    min-width: 140px;
+  }
+  
+  .dropdown-item,
+  .dropdown-balance {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
 
 @media (max-width: 1024px) {
   .header-container {

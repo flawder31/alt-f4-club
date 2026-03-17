@@ -253,3 +253,24 @@
     right: 35px;
   }
 }
+
+
+
+
+/* Добавьте в LoginModal.css и RegisterModal.css */
+
+.modal-error {
+  color: #ff4d4d;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 8px;
+  background-color: rgba(255, 77, 77, 0.1);
+  border: 1px solid #ff4d4d;
+}
+
+.login-btn-modal:disabled,
+.register-btn-modal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
