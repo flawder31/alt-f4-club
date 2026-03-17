@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import logo from '../../public/images/logo.png'
 import RegisterModal from './RegisterModal'
 import LoginModal from './LoginModal'
@@ -108,7 +109,7 @@ function Header() {
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)}
-        onSwitchToRegister={switchToRegister} 
+        onSwitchToRegister={switchToRegister} // Переключаем на регистрацию
       />
     </>
   )
