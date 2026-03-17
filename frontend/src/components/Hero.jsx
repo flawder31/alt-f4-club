@@ -5,7 +5,7 @@ import '../styles/global.css'
 
 function Hero() {
   return (
-    <section className="hero">
+    <section id="hero" className="hero">
       <div className="hero-background">
         <img className="hero-image" src={background} alt="Фон" />
       </div>
