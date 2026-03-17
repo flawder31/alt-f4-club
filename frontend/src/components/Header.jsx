@@ -2,13 +2,15 @@ import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import logo from '../../public/images/logo.png'
 import RegisterModal from './RegisterModal'
+import LoginModal from './LoginModal'
 import '../styles/Header.css'
 import '../styles/global.css'
 
 function Header() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleScrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -28,7 +30,17 @@ function Header() {
 
   const handleLoginClick = (e) => {
     e.preventDefault();
-    setIsModalOpen(true);
+    setIsLoginModalOpen(true);
+  };
+
+  const switchToRegister = () => {
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(true); 
+  };
+
+  const switchToLogin = () => {
+    setIsRegisterModalOpen(false); 
+    setIsLoginModalOpen(true); 
   };
 
   return (
@@ -88,8 +100,15 @@ function Header() {
       </header>
 
       <RegisterModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        isOpen={isRegisterModalOpen} 
+        onClose={() => setIsRegisterModalOpen(false)}
+        onSwitchToLogin={switchToLogin}
+      />
+
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)}
+        onSwitchToRegister={switchToRegister} 
       />
     </>
   )

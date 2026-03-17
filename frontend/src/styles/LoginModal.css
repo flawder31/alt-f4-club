@@ -17,7 +17,7 @@
   background-color: var(--primary-color);
   border: 3px solid var(--neon-blue);
   width: 364px;
-  min-height: 426px;
+  min-height: 368px; 
   position: relative;
   padding: 24px 20px 30px;
   animation: slideIn 0.3s ease;
@@ -40,10 +40,6 @@
   justify-content: center;
   padding: 0;
   transition: color 0.2s;
-}
-
-.modal-close:hover {
-  color: var(--neon-blue);
 }
 
 .modal-logo-container {
@@ -113,43 +109,19 @@
   background-color: var(--primary-color);
 }
 
-.modal-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+.password-field .input-label {
+  right: 40px;
+  width: auto;
+  max-width: calc(100% - 50px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.register-btn-modal {
-  width: 100%;
-  height: 40px;
-  background-color: transparent;
-  border: 2px solid var(--neon-blue);
-  color: var(--neon-blue);
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.register-btn-modal:hover {
-  background-color: var(--neon-blue);
-  color: var(--primary-color);
-}
-
-.login-link {
-  text-align: center;
-  color: var(--text-light);
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.2s;
-}
-
-.login-link:hover {
-  color: var(--text-main);
-}
-
-.password-field {
-  position: relative;
+.password-field .modal-input:focus + .input-label,
+.password-field .modal-input:not(:placeholder-shown) + .input-label {
+  right: auto;
+  max-width: none;
 }
 
 .password-toggle {
@@ -167,33 +139,51 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-light);
   transition: color 0.2s;
   z-index: 10;
-}
-
-.password-icon {
-  width: 20px;
-  height: 20px;
-  transition: filter 0.2s;
 }
 
 .password-toggle:hover {
   color: var(--neon-blue);
 }
 
-.password-field .input-label {
-  right: 40px; 
-  width: auto;
-  max-width: calc(100% - 50px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
 }
 
-.password-field .modal-input:focus + .input-label,
-.password-field .modal-input:not(:placeholder-shown) + .input-label {
-  right: auto;
-  max-width: none;
+.login-btn-modal {
+  width: 143px;
+  height: 41px;
+  background-color: transparent;
+  border: 2px solid var(--neon-blue);
+  color: var(--neon-blue);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.login-btn-modal:hover {
+  background-color: var(--neon-blue);
+  color: var(--primary-color);
+}
+
+.register-link {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+  text-align: center;
+  display: block;
+}
+
+.register-link:hover {
+  color: var(--text-main);
 }
 
 
@@ -239,17 +229,18 @@
     top: 9px;
   }
   
-  .register-btn {
-    height: 38px;
-    font-size: 15px;
+  .password-field .input-label {
+    right: 35px;
   }
-
+  
   .password-toggle {
     font-size: 16px;
     right: 8px;
   }
   
-  .password-field .input-label {
-    right: 35px;
+  .login-btn-modal {
+    width: 130px;
+    height: 38px;
+    font-size: 15px;
   }
 }

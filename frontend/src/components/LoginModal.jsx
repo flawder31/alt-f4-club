@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import logo from '../../public/images/logo.png'
 import eye from '../../public/images/eye.svg'
 import closed_eye from '../../public/images/closed_eye.svg'
-import '../styles/RegisterModal.css'
+import '../styles/LoginModal.css'
 import '../styles/global.css'
 
-function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
+function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -24,10 +24,10 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
     }
   }, [isOpen, onClose])
 
-  const handleSwitchToLogin = (e) => {
+  const handleSwitchToRegister = (e) => {
     e.preventDefault()
-    onClose()
-    onSwitchToLogin() 
+    onClose() 
+    onSwitchToRegister()
   }
 
   if (!isOpen) return null
@@ -41,37 +41,27 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
           <img className="modal-logo" src={logo} alt="Логотип" />
         </div>
 
-        <h2 className="modal-title sansation-bold">Регистрация</h2>
+        <h2 className="modal-title sansation-bold">Авторизация</h2>
 
         <form className="modal-form">
           <div className="input-field">
             <input 
               type="tel" 
-              id="phone" 
+              id="login-phone" 
               className="modal-input sansation-regular" 
               placeholder=" "
             />
-            <label htmlFor="phone" className="input-label sansation-regular">Телефон</label>
-          </div>
-
-          <div className="input-field">
-            <input 
-              type="text" 
-              id="name" 
-              className="modal-input sansation-regular" 
-              placeholder=" "
-            />
-            <label htmlFor="name" className="input-label sansation-regular">Имя</label>
+            <label htmlFor="login-phone" className="input-label sansation-regular">Телефон</label>
           </div>
 
           <div className="input-field password-field">
             <input 
               type={showPassword ? 'text' : 'password'} 
-              id="password" 
+              id="login-password" 
               className="modal-input sansation-regular" 
               placeholder=" "
             />
-            <label htmlFor="password" className="input-label sansation-regular">Пароль</label>
+            <label htmlFor="login-password" className="input-label sansation-regular">Пароль</label>
             <button 
               type="button"
               className="password-toggle"
@@ -87,12 +77,12 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
           </div>
 
           <div className="modal-buttons">
-            <button type="submit" className="register-btn-modal sansation-bold">
-              ЗАРЕГИСТРИРОВАТЬСЯ
+            <button type="submit" className="login-btn-modal sansation-bold">
+              ВОЙТИ
             </button>
             
-            <a href="/login" onClick={handleSwitchToLogin} className="login-link sansation-regular">
-              Уже есть аккаунт? Войти
+            <a href="/register" onClick={handleSwitchToRegister} className="register-link sansation-regular">
+              Нет аккаунта?
             </a>
           </div>
         </form>
@@ -101,4 +91,4 @@ function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
   )
 }
 
-export default RegisterModal
+export default LoginModal
