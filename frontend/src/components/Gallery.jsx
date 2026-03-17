@@ -10,7 +10,7 @@ import photo6 from '../../public/images/gallery-6.avif'
 
 function Gallery() {
   return (
-    <section id="gallery" className="gallery-section">
+    <section className="gallery-section">
       <div className="container">
         <h2 className="gallery-title sansation-bold">Атмосфера</h2>
         
