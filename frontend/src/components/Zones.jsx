@@ -7,7 +7,7 @@ import proImage from '../../public/images/pro-zone.webp'
 
 function Zones() {
   return (
-    <section className="zones-section">
+    <section id="price" className="zones-section">
       <div className="container">
         <h2 className="zones-title sansation-bold">Зоны</h2>
         
