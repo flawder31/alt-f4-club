@@ -18,6 +18,7 @@
 .footer-left {
   display: flex;
   align-items: center;
+  gap: 10px; 
   width: 335px;
 }
 
@@ -37,8 +38,6 @@
   color: var(--text-main);
   font-size: 16px;
   line-height: 1.4;
-  width: 264px;
-  margin-top: 5px;
 }
 
 .footer-contacts {
@@ -78,7 +77,6 @@
   }
   
   .footer-left,
-  .footer-copyright,
   .footer-contacts,
   .footer-right {
     width: auto;
@@ -104,15 +102,14 @@
   }
   
   .footer-left,
-  .footer-copyright,
   .footer-contacts,
   .footer-right {
     width: 100%;
     min-width: auto;
   }
   
-  .footer-copyright {
-    margin-top: 0;
+  .footer-left {
+    gap: 5px;
   }
   
   .footer-contacts {
@@ -133,6 +130,12 @@
 @media (max-width: 480px) {
   .footer-container {
     gap: 20px;
+  }
+  
+  .footer-left {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 5px;
   }
   
   .footer-logo {
