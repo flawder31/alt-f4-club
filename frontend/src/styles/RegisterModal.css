@@ -1,0 +1,251 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background-color: var(--primary-color);
+  border: 3px solid var(--neon-blue);
+  width: 364px;
+  min-height: 426px;
+  position: relative;
+  padding: 24px 20px 30px;
+  animation: slideIn 0.3s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  color: var(--neon-blue);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.modal-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.modal-logo {
+  width: 81px;
+  height: 69px;
+  object-fit: cover;
+}
+
+.modal-title {
+  color: var(--text-main);
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-field {
+  position: relative;
+  width: 100%;
+}
+
+.modal-input {
+  width: 100%;
+  height: 39px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--neon-blue);
+  color: var(--text-main);
+  font-size: 15px;
+  padding: 0 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input:focus {
+  border-color: var(--text-main);
+}
+
+.input-label {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: var(--text-light);
+  font-size: 15px;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  background-color: var(--primary-color);
+  padding: 0 4px;
+}
+
+.modal-input:focus + .input-label,
+.modal-input:not(:placeholder-shown) + .input-label {
+  top: -8px;
+  left: 8px;
+  font-size: 12px;
+  color: var(--neon-blue);
+  background-color: var(--primary-color);
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.register-btn-modal {
+  width: 100%;
+  height: 40px;
+  background-color: transparent;
+  border: 2px solid var(--neon-blue);
+  color: var(--neon-blue);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-btn-modal:hover {
+  background-color: var(--neon-blue);
+  color: var(--primary-color);
+}
+
+.login-link {
+  text-align: center;
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.login-link:hover {
+  color: var(--text-main);
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.password-toggle:hover {
+  color: var(--neon-blue);
+}
+
+.password-icon {
+  width: 20px;
+  height: 20px; 
+  transition: filter 0.2s;
+}
+
+.password-field .input-label {
+  right: 40px; 
+  width: auto;
+  max-width: calc(100% - 50px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.password-field .modal-input:focus + .input-label,
+.password-field .modal-input:not(:placeholder-shown) + .input-label {
+  right: auto;
+  max-width: none;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 90%;
+    max-width: 364px;
+    padding: 20px 15px;
+  }
+  
+  .modal-title {
+    font-size: 24px;
+  }
+  
+  .modal-input {
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  .input-label {
+    font-size: 14px;
+    top: 9px;
+  }
+  
+  .register-btn {
+    height: 38px;
+    font-size: 15px;
+  }
+
+  .password-toggle {
+    font-size: 16px;
+    right: 8px;
+  }
+  
+  .password-field .input-label {
+    right: 35px;
+  }
+}

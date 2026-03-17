@@ -9,7 +9,6 @@ services:
       - DATABASE_URL=sqlite:///./ALT_F4.db
     networks:
       - app-network
-    #command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  
     command: >
       sh -c "
         python app/seed.py &&
@@ -18,12 +17,12 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # Это важно! Не даем перезаписать node_modules из контейнера
+      - /app/node_modules  
     environment:
-      - CHOKIDAR_USEPOLLING=true  # Для hot-reload в Docker
+      - CHOKIDAR_USEPOLLING=true
       - REACT_APP_API_URL=http://localhost:8000      
     stdin_open: true
     tty: true

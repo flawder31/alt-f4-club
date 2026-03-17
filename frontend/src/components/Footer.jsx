@@ -11,11 +11,10 @@ function Footer() {
           <Link to="/" className="footer-logo-link">
             <img className="footer-logo" src={logo} alt="Логотип" />
           </Link>
-        </div>
-
-        <div className="footer-copyright sansation-regular">
-          © 2026 ALT+F4<br />
-          Все права защищены
+          <div className="footer-copyright sansation-regular">
+            © 2026 ALT+F4<br />
+            Все права защищены
+          </div>
         </div>
 
         <div className="footer-contacts sansation-regular">
