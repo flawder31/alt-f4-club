@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import logo from '../../public/images/logo.png'
 import RegisterModal from './RegisterModal'
 import LoginModal from './LoginModal'
+import DepositModal from './DepositModal'
 import '../styles/Header.css'
 import '../styles/global.css'
 
@@ -12,6 +13,7 @@ function Header() {
   const isHomePage = location.pathname === '/';
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const menuRef = useRef(null);
@@ -71,6 +73,12 @@ function Header() {
   const handleLogout = () => {
     logout();
     setIsUserMenuOpen(false);
+  };
+
+  const handleBalanceClick = (e) => {
+    e.preventDefault();
+    setIsUserMenuOpen(false);
+    setIsDepositModalOpen(true);
   };
 
   return (
@@ -147,14 +155,18 @@ function Header() {
                     Мои брони
                   </Link>
                   
-                  {/* Разделительная линия (как в макете Anima) */}
+                  {/* Разделительная линия */}
                   <div className="dropdown-divider"></div>
                   
-                  {/* Баланс */}
-                  <div className="dropdown-balance">
+                  {/* Баланс - кнопка */}
+                  <button 
+                    className="dropdown-balance-btn"
+                    onClick={handleBalanceClick}
+                    type="button"
+                  >
                     <span className="balance-label">Баланс:</span>
                     <span className="balance-value">{user?.balance || 0} ₽</span>
-                  </div>
+                  </button>
                   
                   {/* Разделительная линия */}
                   <div className="dropdown-divider"></div>
@@ -163,6 +175,7 @@ function Header() {
                   <button 
                     className="dropdown-item logout-btn"
                     onClick={handleLogout}
+                    type="button"
                   >
                     Выйти
                   </button>
@@ -189,6 +202,12 @@ function Header() {
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)}
         onSwitchToRegister={switchToRegister}
+      />
+
+      {/* Модальное окно пополнения баланса */}
+      <DepositModal 
+        isOpen={isDepositModalOpen} 
+        onClose={() => setIsDepositModalOpen(false)}
       />
     </>
   )
