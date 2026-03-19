@@ -15,6 +15,7 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   
   const { login: authLogin } = useAuth();
 
@@ -26,8 +27,8 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
       document.body.style.overflow = 'hidden'
-      // Сбрасываем ошибки при открытии
       setError('');
+      setFieldErrors({});
       setFormData({ phone: '', password: '' });
     }
     
@@ -39,15 +40,39 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id.replace('login-', '')]: value
-    }));
+    
+    if (id === 'login-phone') {
+      const phoneValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        phone: phoneValue
+      }));
+      
+      if (fieldErrors.phone) {
+        setFieldErrors(prev => ({
+          ...prev,
+          phone: ''
+        }));
+      }
+    } else if (id === 'login-password') {
+      setFormData(prev => ({
+        ...prev,
+        password: value
+      }));
+      
+      if (fieldErrors.password) {
+        setFieldErrors(prev => ({
+          ...prev,
+          password: ''
+        }));
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
     setLoading(true);
 
     try {
@@ -55,7 +80,37 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
       authLogin(response.user, response.access_token);
       onClose();
     } catch (err) {
-      setError(err || 'Ошибка при входе');
+      console.error('Ошибка входа:', err);
+      
+      if (typeof err === 'object') {
+        if (err.detail) {
+          if (Array.isArray(err.detail)) {
+            const fieldErrorMessages = {};
+            err.detail.forEach(item => {
+              if (item.loc && item.loc.length > 1) {
+                const field = item.loc[1]; я
+                if (field === 'phone') {
+                  fieldErrorMessages.phone = item.msg;
+                } else if (field === 'password') {
+                  fieldErrorMessages.password = item.msg;
+                }
+              }
+            });
+            setFieldErrors(fieldErrorMessages);
+            setError('Пожалуйста, исправьте ошибки в форме');
+          } else {
+            setError(err.detail);
+          }
+        } else if (err.message) {
+          setError(err.message);
+        } else {
+          setError('Ошибка при входе');
+        }
+      } else if (typeof err === 'string') {
+        setError(err);
+      } else {
+        setError('Произошла неизвестная ошибка');
+      }
     } finally {
       setLoading(false);
     }
@@ -87,20 +142,22 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
             <input 
               type="tel" 
               id="login-phone" 
-              className="modal-input sansation-regular" 
+              className={`modal-input sansation-regular ${fieldErrors.phone ? 'input-error' : ''}`} 
               placeholder=" "
               value={formData.phone}
               onChange={handleChange}
+              maxLength="11"
               required
             />
             <label htmlFor="login-phone" className="input-label sansation-regular">Телефон</label>
+            {fieldErrors.phone && <div className="field-error sansation-regular">{fieldErrors.phone}</div>}
           </div>
 
           <div className="input-field password-field">
             <input 
               type={showPassword ? 'text' : 'password'} 
               id="login-password" 
-              className="modal-input sansation-regular" 
+              className={`modal-input sansation-regular ${fieldErrors.password ? 'input-error' : ''}`} 
               placeholder=" "
               value={formData.password}
               onChange={handleChange}
@@ -118,6 +175,7 @@ function LoginModal({ isOpen, onClose, onSwitchToRegister }) {
                 className="password-icon"
               />
             </button>
+            {fieldErrors.password && <div className="field-error sansation-regular">{fieldErrors.password}</div>}
           </div>
 
           <div className="modal-buttons">

@@ -81,8 +81,6 @@
   color: var(--neon-blue);
 }
 
-/* Замените старый блок .user-dropdown на этот */
-
 .user-menu-container {
   position: relative;
 }
@@ -132,28 +130,35 @@
 
 .dropdown-item:hover {
   background-color: rgba(29, 172, 255, 0.1);
-  color: var(--neon-blue);
 }
 
-/* Добавьте эти стили в конец файла */
-
-/* Баланс в меню */
-.dropdown-balance {
+.dropdown-balance-btn {
+  width: 100%;
   padding: 8px 17px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-main);
-  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.dropdown-balance-btn:hover {
+  background-color: rgba(29, 172, 255, 0.1);
 }
 
 .balance-label {
-  color: #b9b9b9;
+  color: var(--text-main);
+  font-size: 14px;
 }
 
 .balance-value {
   color: var(--neon-blue);
   font-weight: 600;
+  font-size: 14px;
+  transition: color 0.3s ease;
 }
 
 .dropdown-divider {
@@ -171,6 +176,7 @@
   background-color: rgba(255, 77, 77, 0.1);
   color: #ff4d4d;
 }
+
 
 @keyframes dropdownFade {
   from {

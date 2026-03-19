@@ -1,0 +1,155 @@
+.deposit-modal-content {
+  background-color: var(--primary-color);
+  border: 3px solid var(--neon-blue);
+  width: 364px;
+  position: relative;
+  padding: 30px 20px;
+  animation: slideIn 0.3s ease;
+}
+
+.deposit-modal-title {
+  color: var(--text-main);
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.deposit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.custom-number-input {
+  position: relative;
+  width: 100%;
+}
+
+.custom-number-input .modal-input {
+  width: 100%;
+  height: 39px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--neon-blue);
+  color: var(--text-main);
+  font-size: 15px;
+  padding: 0 70px 0 12px; 
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.custom-number-input .modal-input:focus {
+  border-color: var(--text-main);
+}
+
+.number-controls {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  width: 30px;
+  border-left: 1px solid var(--neon-blue);
+}
+
+.number-control {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.number-control:hover {
+  color: var(--neon-blue);
+  background-color: rgba(29, 172, 255, 0.1);
+}
+
+.number-control:active {
+  transform: scale(0.95);
+}
+
+.number-control.increment {
+  border-bottom: 1px solid var(--neon-blue);
+}
+
+.deposit-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.deposit-btn {
+  width: 100%;
+  height: 41px;
+  background-color: transparent;
+  border: 2px solid var(--neon-blue);
+  color: var(--neon-blue);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.deposit-btn:hover:not(:disabled) {
+  background-color: var(--neon-blue);
+  color: var(--primary-color);
+}
+
+.deposit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deposit-cancel-btn {
+  width: 100%;
+  height: 41px;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.deposit-cancel-btn:hover {
+  color: var(--text-main);
+}
+
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .deposit-modal-content {
+    width: 90%;
+    padding: 20px 15px;
+  }
+  
+  .deposit-modal-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .quick-amounts {
+    flex-wrap: wrap;
+  }
+  
+  .quick-amount {
+    min-width: 80px;
+  }
+}
