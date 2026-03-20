@@ -20,12 +20,9 @@ function Hero() {
           </span>
         </h1>
         
-        <Link to="/booking" className="hero-button sansation-bold">
-          ЗАБРОНИРОВАТЬ
-        </Link>
+        <Link to="/booking" className="hero-button sansation-bold">ЗАБРОНИРОВАТЬ</Link>
       </div>
     </section>
   )
 }
-
 export default Hero
