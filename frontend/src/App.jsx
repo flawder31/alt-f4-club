@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext' 
 import HomePage from './pages/HomePage'
 import BookingPage from './pages/BookingPage'
+import SeatsPage from './pages/SeatsPage'
 import './App.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/booking" element={<BookingPage />} />
+          <Route path="/seats" element={<SeatsPage />} />
         </Routes>
       </div>
       </BrowserRouter>

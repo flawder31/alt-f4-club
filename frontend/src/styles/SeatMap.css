@@ -1,0 +1,139 @@
+.seatmap-container {
+  background-color: transparent;
+  margin-top: 20px;
+}
+
+.seatmap-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.seatmap-legend {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  border: 2px solid var(--neon-blue);
+}
+
+.legend-color.free {
+  background-color: #02020C;
+  border-color: #1DACFF;
+}
+
+.legend-color.vip-color {
+  background-color: #02020C;
+  border-color: #3E3BEE;
+}
+
+.legend-color.pro-color {
+  background-color: #02020C;
+  border-color: #BC2AED;
+}
+
+.seatmap-svg-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background-color: #02020C;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: default; /* На контейнере стандартный курсор */
+}
+
+.seatmap-svg-wrapper svg {
+  width: 100%;
+  height: auto;
+  min-width: 713px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Стили для мест - курсор уже задан через inline style */
+.seat-rect {
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.seat-rect:hover:not(.seat-busy) {
+  filter: brightness(1.2);
+  opacity: 1 !important;
+}
+
+.seat-rect.seat-busy {
+  cursor: not-allowed;
+}
+
+.seatmap-svg-wrapper svg text {
+  font-family: 'Sansation-Bold', Arial, sans-serif;
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .seatmap-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .seatmap-legend {
+    gap: 20px;
+  }
+  
+  .legend-item {
+    font-size: 12px;
+  }
+  
+  .legend-color {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .seatmap-svg-wrapper {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seatmap-legend {
+    gap: 15px;
+  }
+  
+  .legend-item {
+    font-size: 10px;
+  }
+  
+  .legend-color {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.seatmap-loading,
+.seatmap-error {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-main);
+  font-size: 18px;
+  background-color: #02020C;
+  border: 2px solid var(--neon-blue);
+  border-radius: 8px;
+}
