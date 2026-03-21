@@ -5,6 +5,7 @@ import logo from '../../public/images/logo.png'
 import RegisterModal from './RegisterModal'
 import LoginModal from './LoginModal'
 import DepositModal from './DepositModal'
+import MyBookingsModal from './MyBookingsModal' // Новый компонент
 import '../styles/Header.css'
 import '../styles/global.css'
 
@@ -14,6 +15,7 @@ function Header() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false); // Новое состояние
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const menuRef = useRef(null);
@@ -80,6 +82,12 @@ function Header() {
     setIsDepositModalOpen(true);
   };
 
+  const handleMyBookingsClick = (e) => {
+    e.preventDefault();
+    setIsUserMenuOpen(false);
+    setIsMyBookingsModalOpen(true);
+  };
+
   return (
     <>
       <header className="header">
@@ -144,13 +152,13 @@ function Header() {
               
               {isUserMenuOpen && (
                 <div className="user-dropdown" ref={menuRef}>
-                  <Link 
-                    to="/my-bookings" 
+                  <button 
                     className="dropdown-item"
-                    onClick={() => setIsUserMenuOpen(false)}
+                    onClick={handleMyBookingsClick}
+                    type="button"
                   >
                     Мои брони
-                  </Link>
+                  </button>
                   
                   <div className="dropdown-divider"></div>
                   
@@ -198,6 +206,11 @@ function Header() {
       <DepositModal 
         isOpen={isDepositModalOpen} 
         onClose={() => setIsDepositModalOpen(false)}
+      />
+
+      <MyBookingsModal 
+        isOpen={isMyBookingsModalOpen} 
+        onClose={() => setIsMyBookingsModalOpen(false)}
       />
     </>
   )
