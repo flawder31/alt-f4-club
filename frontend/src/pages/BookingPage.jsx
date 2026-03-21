@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -12,12 +12,16 @@ import arrowRight from '../../public/images/arrow-right.svg'
 
 function BookingPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
-  const [selectedDate, setSelectedDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  // Получаем сохраненные данные из location.state, если они есть
+  const savedState = location.state || {};
+  
+  const [selectedDate, setSelectedDate] = useState(savedState.date || '');
+  const [startTime, setStartTime] = useState(savedState.startTime || '');
+  const [endTime, setEndTime] = useState(savedState.endTime || '');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   
   const [isStartSelectOpen, setIsStartSelectOpen] = useState(false);
@@ -163,6 +167,9 @@ function BookingPage() {
     }
   };
 
+  const handleBackClick = () => {
+    navigate('/');
+  };
 
   if (!isAuthenticated) {
     return (
@@ -309,7 +316,13 @@ function BookingPage() {
             </div>
           </div>
           
-          <div className="next-button-container">
+          <div className="button-container">
+            <button 
+              className="back-button sansation-bold"
+              onClick={handleBackClick}
+            >
+              НАЗАД
+            </button>
             <button 
               className={`next-button sansation-bold ${(!selectedDate || !startTime || !endTime) ? 'disabled' : ''}`}
               onClick={handleNextClick}

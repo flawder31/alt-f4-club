@@ -46,11 +46,23 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
+  const updateUser = async () => {
+    try {
+      const userData = await getCurrentUser();
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      return null;
+    }
+  };
+
   const value = {
     user,
     loading,
     login,
     logout,
+    updateUser, 
     isAuthenticated: !!user,
   };
 

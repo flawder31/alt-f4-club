@@ -22,9 +22,9 @@ INIT_USERS = [
 ]
 
 INIT_TYPES = [
-    {"name": "Standart", "price_per_hour": 200},
-    {"name": "Vip", "price_per_hour": 400},
-    {"name": "Pro", "price_per_hour": 600},
+    {"name": "Standart", "price_per_hour": 100},
+    {"name": "Vip", "price_per_hour": 200},
+    {"name": "Pro", "price_per_hour": 300},
 ]
 
 INIT_SEATS = [

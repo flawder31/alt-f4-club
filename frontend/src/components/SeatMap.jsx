@@ -47,6 +47,13 @@ function SeatMap({ selectedDate, startTime, endTime, selectedSeat, onSelectSeat 
     }
   }, [selectedDate, startTime, endTime])
 
+  // Функция для получения типа места по ID
+  const getSeatTypeById = (seatId) => {
+    const seat = seats.find(s => s.id === seatId)
+    if (!seat) return 'Standart'
+    return seat.type
+  }
+
   // Получение стилей для места
   const getSeatStyle = (seatId, seatType) => {
     const isBusy = busySeatIds.includes(seatId)
@@ -69,13 +76,13 @@ function SeatMap({ selectedDate, startTime, endTime, selectedSeat, onSelectSeat 
     
     if (isBusy) {
       fillColor = '#02020C'
-      opacity = 0.4 // Занятые места более прозрачные
+      opacity = 0.4
     } else if (isSelected) {
-      fillColor = strokeColor // Полностью заливается цветом контура
+      fillColor = strokeColor
       opacity = 1
     } else {
-      fillColor = '#02020C' // Темный фон
-      opacity = 0.8 // Свободные места чуть прозрачные
+      fillColor = '#02020C'
+      opacity = 0.8
     }
     
     return { fillColor, strokeColor, opacity, isBusy }
@@ -153,6 +160,7 @@ function SeatMap({ selectedDate, startTime, endTime, selectedSeat, onSelectSeat 
           stroke-width="2"
           data-seat-id="${seat.id}"
           data-seat-type="${seat.type}"
+          data-seat-number="${seat.number}"
           data-is-busy="${isBusy}"
           style="opacity: ${opacity}; transition: opacity 0.2s ease, filter 0.2s ease; cursor: ${isBusy ? 'not-allowed' : 'pointer'}"
           class="seat-rect ${isBusy ? 'seat-busy' : ''}"
@@ -205,13 +213,13 @@ function SeatMap({ selectedDate, startTime, endTime, selectedSeat, onSelectSeat 
     return svgContent
   }
 
-  const handleSeatClick = (seatId, isBusy) => {
-    if (isBusy) return // Занятые места не выбираем
+  const handleSeatClick = (seatId, seatType, seatNumber, isBusy) => {
+    if (isBusy) return
     
     if (selectedSeat === seatId) {
-      onSelectSeat(null) // Снимаем выбор
+      onSelectSeat(null, null, null) // Снимаем выбор
     } else {
-      onSelectSeat(seatId) // Выбираем место
+      onSelectSeat(seatId, seatType, seatNumber) // Выбираем место с полной информацией
     }
   }
 
@@ -240,8 +248,10 @@ function SeatMap({ selectedDate, startTime, endTime, selectedSeat, onSelectSeat 
           const rect = e.target.closest('.seat-rect')
           if (rect) {
             const seatId = parseInt(rect.getAttribute('data-seat-id'))
+            const seatType = rect.getAttribute('data-seat-type')
+            const seatNumber = parseInt(rect.getAttribute('data-seat-number'))
             const isBusy = rect.getAttribute('data-is-busy') === 'true'
-            handleSeatClick(seatId, isBusy)
+            handleSeatClick(seatId, seatType, seatNumber, isBusy)
           }
         }}
       />
