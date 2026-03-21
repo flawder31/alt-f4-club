@@ -127,10 +127,10 @@ function DepositModal({ isOpen, onClose }) {
             
             <button 
               type="button" 
-              className="deposit-cancel-btn sansation-regular"
+              className="deposit-btn sansation-bold"
               onClick={onClose}
             >
-              Отмена
+              ОТМЕНА
             </button>
           </div>
         </form>
