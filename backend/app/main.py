@@ -129,6 +129,7 @@ class AdminBookingResponse(BaseModel):
     user_phone: str
     user_name: str
     seat_number: int
+    seat_type: str
     start_time: str
     end_time: str
     price: int
@@ -542,6 +543,7 @@ def get_my_bookings(
         bookings_list.append({
             "id": booking.id,
             "seat_number": booking.seat.number,
+            "seat_type": booking.seat.type.name,
             "start_time": booking.start_time,
             "end_time": booking.end_time,
             "price": float(booking.price),
@@ -616,6 +618,7 @@ def get_all_bookings(
                 user_phone=booking.user.phone,
                 user_name=booking.user.name,
                 seat_number=booking.seat.number,
+                seat_type=booking.seat.type.name,
                 start_time=booking.start_time,
                 end_time=booking.end_time,
                 price=int(booking.price),
