@@ -1,8 +1,11 @@
 :root {
     --primary-color: #01010B;
+    --additional-color: #0A0A1F;
     --neon-blue: #1DACFF;
-    --neon-red: #FF0206;
+    --neon-red: #ff4d4d;
     --neon-green: #00FF5E;
+    --neon-purple: #BC2AED;
+    --neon-dark-blue: #3E3BEE;
     --text-main: #FFFFFF;
     --text-light: #B9B9B9;
 }

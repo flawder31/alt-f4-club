@@ -1,0 +1,276 @@
+.bookings-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+.bookings-modal-content {
+  background-color: var(--primary-color);
+  border: 3px solid var(--neon-blue);
+  width: 550px;
+  max-width: 90%;
+  max-height: 80vh;
+  position: relative;
+  padding: 30px 25px;
+  animation: slideIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.bookings-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  color: var(--neon-blue);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.bookings-modal-title {
+  color: var(--text-main);
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.bookings-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 5px;
+}
+
+.bookings-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bookings-list::-webkit-scrollbar-track {
+  background: rgba(29, 172, 255, 0.1);
+  border-radius: 3px;
+}
+
+.bookings-list::-webkit-scrollbar-thumb {
+  background: var(--neon-blue);
+  border-radius: 3px;
+}
+
+.booking-item {
+  margin-bottom: 20px;
+}
+
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(29, 172, 255, 0.3);
+}
+
+.booking-number {
+  color: var(--neon-blue);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.booking-details {
+  padding-left: 5px;
+}
+
+.booking-detail-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 6px 0;
+  gap: 20px;
+}
+
+.detail-label {
+  color: #b9b9b9;
+  font-size: 14px;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+  flex: 1;
+  word-break: break-word;
+  padding-right: 12px; 
+}
+
+.detail-value.price {
+  color: var(--neon-blue);
+  font-weight: 600;
+}
+
+.seat-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  margin-left: 8px;
+  color: white;
+  vertical-align: middle;
+}
+
+.booking-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+  margin: 15px 0 5px;
+}
+
+.bookings-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-main);
+}
+
+.bookings-empty p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.bookings-empty-subtitle {
+  font-size: 14px;
+  color: #b9b9b9;
+}
+
+.bookings-loading,
+.bookings-error {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-main);
+  font-size: 16px;
+}
+
+.bookings-error {
+  color: var(--neon-red);
+}
+
+.bookings-modal-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(29, 172, 255, 0.2);
+}
+
+.bookings-close-btn {
+  background-color: transparent;
+  border: 2px solid var(--neon-blue);
+  color: var(--neon-blue);
+  padding: 10px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.bookings-close-btn:hover {
+  background-color: var(--neon-blue);
+  color: var(--primary-color);
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .bookings-modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .bookings-modal-title {
+    font-size: 20px;
+  }
+  
+  .booking-number {
+    font-size: 14px;
+  }
+  
+  .booking-detail-row {
+    grid-template-columns: 95px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+  }
+  
+  .detail-label {
+    font-size: 12px;
+  }
+
+  .detail-value {
+    font-size: 12px;
+    text-align: left;
+    padding-right: 8px;
+  }
+
+  .seat-type-badge {
+    padding: 2px 6px;
+    font-size: 10px;
+    margin-left: 6px;
+  }
+  
+  .bookings-close-btn {
+    padding: 8px 25px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-detail-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .detail-label {
+    font-size: 11px;
+  }
+  
+  .detail-value {
+    font-size: 12px;
+    text-align: left;
+    padding-left: 8px;
+    padding-right: 0; 
+  }
+}

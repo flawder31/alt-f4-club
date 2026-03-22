@@ -5,6 +5,7 @@ import logo from '../../public/images/logo.png'
 import RegisterModal from './RegisterModal'
 import LoginModal from './LoginModal'
 import DepositModal from './DepositModal'
+import MyBookingsModal from './MyBookingsModal' // Новый компонент
 import '../styles/Header.css'
 import '../styles/global.css'
 
@@ -14,6 +15,7 @@ function Header() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false); // Новое состояние
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const menuRef = useRef(null);
@@ -21,7 +23,6 @@ function Header() {
   
   const { user, isAuthenticated, logout } = useAuth();
 
-  // Закрытие меню при клике вне его
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -81,11 +82,16 @@ function Header() {
     setIsDepositModalOpen(true);
   };
 
+  const handleMyBookingsClick = (e) => {
+    e.preventDefault();
+    setIsUserMenuOpen(false);
+    setIsMyBookingsModalOpen(true);
+  };
+
   return (
     <>
       <header className="header">
         <div className="header-container">
-          {/* Логотип */}
           <a href="/" onClick={handleLogoClick} className="group">
             <img className="logo-img" alt="Логотип" src={logo} />
             <div className="logo-text sansation-bold">
@@ -95,7 +101,6 @@ function Header() {
             </div>
           </a>
 
-          {/* Навигация - только на главной странице */}
           {isHomePage && (
             <nav className="navigation">
               <a 
@@ -133,7 +138,8 @@ function Header() {
             </nav>
           )}
 
-          {/* Блок пользователя */}
+          {!isHomePage && <div className="nav-placeholder"></div>}
+
           {isAuthenticated ? (
             <div className="user-menu-container">
               <button 
@@ -146,19 +152,16 @@ function Header() {
               
               {isUserMenuOpen && (
                 <div className="user-dropdown" ref={menuRef}>
-                  {/* Мои брони */}
-                  <Link 
-                    to="/my-bookings" 
+                  <button 
                     className="dropdown-item"
-                    onClick={() => setIsUserMenuOpen(false)}
+                    onClick={handleMyBookingsClick}
+                    type="button"
                   >
                     Мои брони
-                  </Link>
+                  </button>
                   
-                  {/* Разделительная линия */}
                   <div className="dropdown-divider"></div>
                   
-                  {/* Баланс - кнопка */}
                   <button 
                     className="dropdown-balance-btn"
                     onClick={handleBalanceClick}
@@ -168,10 +171,8 @@ function Header() {
                     <span className="balance-value">{user?.balance || 0} ₽</span>
                   </button>
                   
-                  {/* Разделительная линия */}
                   <div className="dropdown-divider"></div>
                   
-                  {/* Выход */}
                   <button 
                     className="dropdown-item logout-btn"
                     onClick={handleLogout}
@@ -190,24 +191,26 @@ function Header() {
         </div>
       </header>
 
-      {/* Модальное окно регистрации */}
       <RegisterModal 
         isOpen={isRegisterModalOpen} 
         onClose={() => setIsRegisterModalOpen(false)}
         onSwitchToLogin={switchToLogin}
       />
 
-      {/* Модальное окно авторизации */}
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)}
         onSwitchToRegister={switchToRegister}
       />
 
-      {/* Модальное окно пополнения баланса */}
       <DepositModal 
         isOpen={isDepositModalOpen} 
         onClose={() => setIsDepositModalOpen(false)}
+      />
+
+      <MyBookingsModal 
+        isOpen={isMyBookingsModalOpen} 
+        onClose={() => setIsMyBookingsModalOpen(false)}
       />
     </>
   )

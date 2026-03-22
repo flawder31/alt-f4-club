@@ -1,3 +1,4 @@
+// src/components/DepositModal.jsx
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { depositBalance } from '../api/auth'
@@ -9,7 +10,7 @@ function DepositModal({ isOpen, onClose }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { user, login } = useAuth();
+  const { user, updateUser } = useAuth(); // добавляем updateUser
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -54,11 +55,9 @@ function DepositModal({ isOpen, onClose }) {
     setLoading(true);
 
     try {
-      const response = await depositBalance(parseInt(amount));
-      if (user) {
-        const updatedUser = { ...user, balance: response.new_balance };
-        login(updatedUser, localStorage.getItem('token'));
-      }
+      await depositBalance(parseInt(amount));
+      // Обновляем данные пользователя после пополнения
+      await updateUser();
       onClose();
     } catch (err) {
       setError(err || 'Ошибка при пополнении');
@@ -128,10 +127,10 @@ function DepositModal({ isOpen, onClose }) {
             
             <button 
               type="button" 
-              className="deposit-cancel-btn sansation-regular"
+              className="deposit-btn sansation-bold"
               onClick={onClose}
             >
-              Отмена
+              ОТМЕНА
             </button>
           </div>
         </form>

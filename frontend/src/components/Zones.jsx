@@ -20,7 +20,7 @@ function Zones() {
                 className="zone-image" 
               />
               <h3 className="zone-name sansation-bold">STANDART</h3>
-              <div className="zone-price sansation-bold">200 ₽/час</div>
+              <div className="zone-price sansation-bold">100 ₽/час</div>
               <p className="zone-description sansation-regular">
                 Для любителей поиграть с друзьями без лишних требований
               </p>
@@ -35,7 +35,7 @@ function Zones() {
                 className="zone-image" 
               />
               <h3 className="zone-name sansation-bold">VIP</h3>
-              <div className="zone-price sansation-bold">400 ₽/час</div>
+              <div className="zone-price sansation-bold">200 ₽/час</div>
               <p className="zone-description sansation-regular">
                 Повышенный комфорт, отдельное помещение
               </p>
@@ -50,7 +50,7 @@ function Zones() {
                 className="zone-image" 
               />
               <h3 className="zone-name sansation-bold">PRO</h3>
-              <div className="zone-price sansation-bold">600 ₽/час</div>
+              <div className="zone-price sansation-bold">300 ₽/час</div>
               <p className="zone-description sansation-regular">
                 Максимальные настройки для киберспорта, топ-железо
               </p>
