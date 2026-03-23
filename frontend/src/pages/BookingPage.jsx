@@ -16,7 +16,10 @@ function BookingPage() {
   const { isAuthenticated } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
-  // Получаем сохраненные данные из location.state, если они есть
+  const WORK_START_HOUR = 7;  
+  const WORK_END_HOUR = 23;
+  const LAST_START_HOUR = 22; 
+  
   const savedState = location.state || {};
   
   const [selectedDate, setSelectedDate] = useState(savedState.date || '');
@@ -30,27 +33,115 @@ function BookingPage() {
   const startSelectRef = useRef(null);
   const endSelectRef = useRef(null);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setIsLoginModalOpen(true);
+  const monthNames = [
+    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+  ];
+
+  const isToday = (dateString) => {
+    if (!dateString) return false;
+    const today = new Date();
+    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    return dateString === todayString;
+  };
+
+  const getCurrentMinutes = () => {
+    const now = new Date();
+    return now.getHours() * 60 + now.getMinutes();
+  };
+
+  const isTimeValidForDate = (time, date) => {
+    if (!time || !date) return true;
+    if (!isToday(date)) return true; 
+    
+    const timeMinutes = timeToMinutes(time);
+    const currentMinutes = getCurrentMinutes();
+    return timeMinutes > currentMinutes;
+  };
+
+  const validateAndResetTimes = (date) => {
+    if (!date) {
+      setStartTime('');
+      setEndTime('');
+      return;
     }
-  }, [isAuthenticated]);
+    
+    let needReset = false;
+    let newStartTime = startTime;
+    let newEndTime = endTime;
+    
+    if (startTime && !isTimeValidForDate(startTime, date)) {
+      newStartTime = '';
+      needReset = true;
+    }
+    
+    if (endTime && !isTimeValidForDate(endTime, date)) {
+      newEndTime = '';
+      needReset = true;
+    }
+    
+    if (needReset) {
+      setStartTime(newStartTime);
+      setEndTime(newEndTime);
+    }
+  };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (startSelectRef.current && !startSelectRef.current.contains(event.target)) {
-        setIsStartSelectOpen(false);
+  const generateStartTimeOptions = () => {
+    const times = [];
+    const isTodaySelected = isToday(selectedDate);
+    const currentMinutes = getCurrentMinutes();
+    
+    for (let hour = WORK_START_HOUR; hour <= LAST_START_HOUR; hour++) {
+      for (let minute of ['00', '30']) {
+        const timeString = `${String(hour).padStart(2, '0')}:${minute}`;
+        const timeMinutes = hour * 60 + parseInt(minute);
+        
+        if (isTodaySelected && timeMinutes <= currentMinutes) {
+          continue;
+        }
+        
+        times.push(
+          <option key={timeString} value={timeString}>{timeString}</option>
+        );
       }
-      if (endSelectRef.current && !endSelectRef.current.contains(event.target)) {
-        setIsEndSelectOpen(false);
-      }
-    };
+    }
+    return times;
+  };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  const generateEndTimeOptions = () => {
+    const times = [];
+    const isTodaySelected = isToday(selectedDate);
+    const currentMinutes = getCurrentMinutes();
+    
+    for (let hour = WORK_START_HOUR; hour <= WORK_END_HOUR; hour++) {
+      for (let minute of ['00', '30']) {
+        if (hour === WORK_START_HOUR && minute === '00') continue;
+
+        if (hour === WORK_END_HOUR && minute === '30') continue;
+        
+        const timeString = `${String(hour).padStart(2, '0')}:${minute}`;
+        const timeMinutes = hour * 60 + parseInt(minute);
+        
+        if (isTodaySelected && timeMinutes <= currentMinutes) {
+          continue;
+        }
+        
+        times.push(
+          <option key={timeString} value={timeString}>{timeString}</option>
+        );
+      }
+    }
+    return times;
+  };
+
+  const startTimes = generateStartTimeOptions();
+  const endTimesList = generateEndTimeOptions();
+
+  const timeToMinutes = (time) => {
+    if (!time) return 0;
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  };
 
   const generateCalendar = () => {
     const year = currentMonth.getFullYear();
@@ -81,8 +172,11 @@ function BookingPage() {
         
         if (selectedDate === dateString) {
           setSelectedDate('');
+          setStartTime('');
+          setEndTime('');
         } else {
-          setSelectedDate(dateString); 
+          setSelectedDate(dateString);
+          validateAndResetTimes(dateString);
         }
       };
       
@@ -108,32 +202,6 @@ function BookingPage() {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
   };
 
-  const monthNames = [
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-  ];
-
-  const generateTimeOptions = () => {
-    const times = [];
-    for (let hour = 0; hour < 24; hour++) {
-      for (let minute of ['00', '30']) {
-        const timeString = `${String(hour).padStart(2, '0')}:${minute}`;
-        times.push(
-          <option key={timeString} value={timeString}>{timeString}</option>
-        );
-      }
-    }
-    return times;
-  };
-
-  const allTimes = generateTimeOptions();
-
-  const timeToMinutes = (time) => {
-    if (!time) return 0;
-    const [hours, minutes] = time.split(':').map(Number);
-    return hours * 60 + minutes;
-  };
-
   const handleStartTimeChange = (time) => {
     setStartTime(time);
     setEndTime(''); 
@@ -146,17 +214,65 @@ function BookingPage() {
   };
 
   const getAvailableEndTimes = () => {
-    if (!startTime) return allTimes; 
+    if (!startTime) return endTimesList;
     
     const startMinutes = timeToMinutes(startTime);
-    return allTimes.filter(time => {
+    const WORK_END_MINUTES = WORK_END_HOUR * 60;
+    const isTodaySelected = isToday(selectedDate);
+    const currentMinutes = getCurrentMinutes();
+    
+    return endTimesList.filter(time => {
       const timeMinutes = timeToMinutes(time.props.value);
-      return timeMinutes > startMinutes;
+      
+      if (isTodaySelected && timeMinutes <= currentMinutes) {
+        return false;
+      }
+      
+      return timeMinutes > startMinutes && timeMinutes <= WORK_END_MINUTES;
     });
   };
 
+  const isValidBooking = () => {
+    if (!selectedDate || !startTime || !endTime) return false;
+    
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+    const WORK_END_MINUTES = WORK_END_HOUR * 60;
+    const isTodaySelected = isToday(selectedDate);
+    const currentMinutes = getCurrentMinutes();
+    
+    if (isTodaySelected && startMinutes <= currentMinutes) {
+      return false;
+    }
+    
+    return startMinutes < endMinutes && endMinutes <= WORK_END_MINUTES;
+  };
+
+  const getErrorMessage = () => {
+    if (!selectedDate || !startTime || !endTime) return '';
+    
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+    const isTodaySelected = isToday(selectedDate);
+    const currentMinutes = getCurrentMinutes();
+    
+    if (isTodaySelected && startMinutes <= currentMinutes) {
+      return `Нельзя забронировать на прошедшее время (сейчас ${Math.floor(currentMinutes / 60)}:${String(currentMinutes % 60).padStart(2, '0')})`;
+    }
+    
+    if (endMinutes > WORK_END_HOUR * 60) {
+      return `Бронирование должно заканчиваться до ${WORK_END_HOUR}:00`;
+    }
+    
+    if (startMinutes >= endMinutes) {
+      return 'Время окончания должно быть позже времени начала';
+    }
+    
+    return '';
+  };
+
   const handleNextClick = () => {
-    if (selectedDate && startTime && endTime) {
+    if (selectedDate && startTime && endTime && isValidBooking()) {
       navigate('/seats', { 
         state: { 
           date: selectedDate, 
@@ -170,6 +286,32 @@ function BookingPage() {
   const handleBackClick = () => {
     navigate('/');
   };
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (startSelectRef.current && !startSelectRef.current.contains(event.target)) {
+        setIsStartSelectOpen(false);
+      }
+      if (endSelectRef.current && !endSelectRef.current.contains(event.target)) {
+        setIsEndSelectOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    validateAndResetTimes(selectedDate);
+  }, [selectedDate]);
 
   if (!isAuthenticated) {
     return (
@@ -196,6 +338,9 @@ function BookingPage() {
       </>
     );
   }
+
+  const errorMessage = getErrorMessage();
+  const isNextDisabled = !selectedDate || !startTime || !endTime || !isValidBooking();
 
   return (
     <>
@@ -236,8 +381,7 @@ function BookingPage() {
             </div>
             
             <div className="time-section">
-              <h2 className="section-title sansation-bold">Выберите время</h2>
-              
+              <h2 className="section-title sansation-bold">Выберите время</h2>             
               <div className="time-selectors">
                 <div className="time-selector" ref={startSelectRef}>
                   <label className="time-label sansation-regular">Начало</label>
@@ -256,18 +400,24 @@ function BookingPage() {
                     
                     {isStartSelectOpen && (
                       <div className="select-dropdown">
-                        {allTimes.map(time => (
-                          <div
-                            key={time.props.value}
-                            className={`select-option sansation-regular ${startTime === time.props.value ? 'selected' : ''}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleStartTimeChange(time.props.value);
-                            }}
-                          >
-                            {time.props.value}
+                        {startTimes.length > 0 ? (
+                          startTimes.map(time => (
+                            <div
+                              key={time.props.value}
+                              className={`select-option sansation-regular ${startTime === time.props.value ? 'selected' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleStartTimeChange(time.props.value);
+                              }}
+                            >
+                              {time.props.value}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="select-option disabled-option sansation-regular">
+                            Нет доступного времени
                           </div>
-                        ))}
+                        )}
                       </div>
                     )}
                   </div>
@@ -290,18 +440,24 @@ function BookingPage() {
                     
                     {isEndSelectOpen && (
                       <div className="select-dropdown">
-                        {getAvailableEndTimes().map(time => (
-                          <div
-                            key={time.props.value}
-                            className={`select-option sansation-regular ${endTime === time.props.value ? 'selected' : ''}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEndTimeChange(time.props.value);
-                            }}
-                          >
-                            {time.props.value}
+                        {getAvailableEndTimes().length > 0 ? (
+                          getAvailableEndTimes().map(time => (
+                            <div
+                              key={time.props.value}
+                              className={`select-option sansation-regular ${endTime === time.props.value ? 'selected' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEndTimeChange(time.props.value);
+                              }}
+                            >
+                              {time.props.value}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="select-option disabled-option sansation-regular">
+                            {!startTime ? 'Сначала выберите начало' : 'Нет доступного времени'}
                           </div>
-                        ))}
+                        )}
                       </div>
                     )}
                   </div>
@@ -311,6 +467,12 @@ function BookingPage() {
               {startTime && endTime && (
                 <div className="selected-time sansation-regular">
                   Выбрано: с {startTime} до {endTime}
+                </div>
+              )}
+              
+              {errorMessage && (
+                <div className="error-message sansation-regular">
+                  {errorMessage}
                 </div>
               )}
             </div>
@@ -324,9 +486,9 @@ function BookingPage() {
               НАЗАД
             </button>
             <button 
-              className={`next-button sansation-bold ${(!selectedDate || !startTime || !endTime) ? 'disabled' : ''}`}
+              className={`next-button sansation-bold ${isNextDisabled ? 'disabled' : ''}`}
               onClick={handleNextClick}
-              disabled={!selectedDate || !startTime || !endTime}
+              disabled={isNextDisabled}
             >
               ДАЛЕЕ
             </button>

@@ -35,6 +35,27 @@
   text-align: center;
 }
 
+.error-message {
+  color: #ff4d4d;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 15px;
+  padding: 8px;
+  background-color: rgba(255, 77, 77, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #ff4d4d;
+}
+
+.disabled-option {
+  color: #b9b9b9;
+  cursor: not-allowed;
+  text-align: center;
+}
+
+.disabled-option:hover {
+  background-color: transparent;
+}
+
 .calendar-header {
   display: flex;
   align-items: center;

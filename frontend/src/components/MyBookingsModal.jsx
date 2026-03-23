@@ -65,6 +65,30 @@ function MyBookingsModal({ isOpen, onClose }) {
     return time
   }
 
+  // Функция для получения цвета бейджа типа места
+  const getSeatTypeColor = (seatType) => {
+    switch(seatType) {
+      case 'Vip':
+        return '#3E3BEE'
+      case 'Pro':
+        return '#BC2AED'
+      default:
+        return '#1DACFF'
+    }
+  }
+
+  // Функция для получения названия типа места на русском
+  const getSeatTypeName = (seatType) => {
+    switch(seatType) {
+      case 'Vip':
+        return 'VIP'
+      case 'Pro':
+        return 'PRO'
+      default:
+        return 'Standart'
+    }
+  }
+
   const getStatusInfo = (status) => {
     switch(status) {
       case 'Активно':
@@ -97,7 +121,10 @@ function MyBookingsModal({ isOpen, onClose }) {
         ) : (
           <div className="bookings-list">
             {bookings.map((booking, index) => {
-              const displayNumber = index + 1 
+              const displayNumber = index + 1
+              const seatTypeColor = getSeatTypeColor(booking.seat_type)
+              const seatTypeName = getSeatTypeName(booking.seat_type)
+              
               return (
                 <div key={booking.id} className="booking-item">
                   <div className="booking-header">
@@ -106,7 +133,15 @@ function MyBookingsModal({ isOpen, onClose }) {
                   <div className="booking-details">
                     <div className="booking-detail-row">
                       <span className="detail-label">Место:</span>
-                      <span className="detail-value">№{booking.seat_number}</span>
+                      <span className="detail-value">
+                        №{booking.seat_number}
+                        <span 
+                          className="seat-type-badge"
+                          style={{ backgroundColor: seatTypeColor }}
+                        >
+                          {seatTypeName}
+                        </span>
+                      </span>
                     </div>
                     <div className="booking-detail-row">
                       <span className="detail-label">Дата и время:</span>
