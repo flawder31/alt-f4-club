@@ -11,7 +11,7 @@ import '../styles/SeatsPage.css'
 function SeatsPage() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { isAuthenticated, user, updateUser } = useAuth() // добавляем updateUser
+  const { isAuthenticated, user, updateUser } = useAuth() 
   const { date, startTime, endTime } = location.state || {}
   
   const [selectedSeat, setSelectedSeat] = useState(null)
@@ -21,30 +21,26 @@ function SeatsPage() {
   const [seatPricePerHour, setSeatPricePerHour] = useState(0)
   const [bookingLoading, setBookingLoading] = useState(false)
   
-  // Если нет данных о бронировании, возвращаем на страницу выбора времени
   if (!date || !startTime || !endTime) {
     navigate('/booking')
     return null
   }
   
-  // Обновляем информацию о выбранном месте
   useEffect(() => {
     if (selectedSeat && selectedSeatType) {
-      // Получаем цену за час в зависимости от типа
       switch(selectedSeatType) {
         case 'Pro':
-          setSeatPricePerHour(300)
+          setSeatPricePerHour(600)
           break
         case 'Vip':
-          setSeatPricePerHour(200)
+          setSeatPricePerHour(400)
           break
         default:
-          setSeatPricePerHour(100)
+          setSeatPricePerHour(200)
       }
     }
   }, [selectedSeat, selectedSeatType])
-  
-  // Расчет количества часов и стоимости
+
   const calculateTotalPrice = () => {
   if (!startTime || !endTime) return 0
   
@@ -97,7 +93,6 @@ function SeatsPage() {
       })
       
       if (response.data) {
-        // Обновляем данные пользователя после успешного бронирования
         await updateUser()
         
         setIsModalOpen(false)
