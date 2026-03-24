@@ -20,6 +20,7 @@
   align-items: center;
   gap: 10px; 
   width: 335px;
+  cursor: pointer;
 }
 
 .footer-logo-link {
@@ -32,12 +33,14 @@
   height: 59px;
   object-fit: cover;
   aspect-ratio: 1.17;
+  pointer-events: none;
 }
 
 .footer-copyright {
   color: var(--text-main);
   font-size: 16px;
   line-height: 1.4;
+  pointer-events: none;
 }
 
 .footer-contacts {

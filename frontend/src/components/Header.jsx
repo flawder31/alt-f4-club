@@ -53,11 +53,7 @@ function Header() {
 
   const handleLogoClick = (e) => {
     e.preventDefault();
-    if (isHomePage) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      window.location.href = '/';
-    }
+    window.location.href = '/';
   };
 
   const handleLoginClick = (e) => {
