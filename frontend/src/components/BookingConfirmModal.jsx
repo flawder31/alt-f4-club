@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useAuth } from '../context/AuthContext'
 import logo from '../../public/images/logo.png'
 import '../styles/BookingConfirmModal.css'
 import '../styles/global.css'
@@ -17,6 +18,11 @@ function BookingConfirmModal({
   pricePerHour,
   isBalanceSufficient
 }) {
+  
+  const { user } = useAuth()
+  const isAdmin = user?.role_id === 1
+  const finalPrice = isAdmin ? 0 : totalPrice
+  const isSufficient = isAdmin ? true : isBalanceSufficient
   
   useEffect(() => {
     const handleEscape = (e) => {
@@ -100,20 +106,22 @@ function BookingConfirmModal({
           
           <div className="confirm-info-row total-row">
             <span className="info-label">Итого:</span>
-            <span className="info-value total-price">{Math.round(totalPrice)} ₽</span>
+            <span className={`info-value total-price ${isAdmin ? 'admin-price' : ''}`}>
+              {Math.round(finalPrice)} ₽
+            </span>
           </div>
           
           <div className="confirm-info-row">
             <span className="info-label">Ваш баланс:</span>
-            <span className={`info-value balance ${!isBalanceSufficient ? 'insufficient' : ''}`}>
+            <span className={`info-value balance ${!isSufficient ? 'insufficient' : ''}`}>
               {balance} ₽
             </span>
           </div>
         </div>
         
-        {!isBalanceSufficient && (
+        {!isSufficient && (
           <div className="confirm-error-message">
-            Недостаточно средств для бронирования. Требуется: {Math.round(totalPrice)} ₽, доступно: {balance} ₽.
+            Недостаточно средств для бронирования. Требуется: {Math.round(finalPrice)} ₽, доступно: {balance} ₽.
           </div>
         )}
         
@@ -125,9 +133,9 @@ function BookingConfirmModal({
             ОТМЕНА
           </button>
           <button 
-            className={`confirm-submit-btn sansation-bold ${!isBalanceSufficient ? 'disabled' : ''}`}
+            className={`confirm-submit-btn sansation-bold ${!isSufficient ? 'disabled' : ''}`}
             onClick={onConfirm}
-            disabled={!isBalanceSufficient}
+            disabled={!isSufficient}
           >
             ПОДТВЕРДИТЬ
           </button>

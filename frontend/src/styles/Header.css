@@ -186,6 +186,24 @@
   color: var(--neon-red);
 }
 
+.user-info-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-badge {
+  background-color: var(--primary-color);
+  color: var(--neon-red);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border: 1px solid var(--neon-red); 
+}
+
 
 @keyframes dropdownFade {
   from {
@@ -203,23 +221,6 @@
   .user-dropdown {
     right: auto;
     left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .user-name-btn {
-    font-size: 14px;
-    padding: 5px 8px;
-  }
-  
-  .user-dropdown {
-    min-width: 140px;
-  }
-  
-  .dropdown-item,
-  .dropdown-balance {
-    padding: 6px 12px;
-    font-size: 13px;
   }
 }
 
@@ -306,5 +307,29 @@
   .login-btn {
     font-size: 14px;
     padding: 5px 0;
+  }
+
+    .user-name-btn {
+    font-size: 14px;
+    padding: 5px 8px;
+  }
+  
+  .user-dropdown {
+    min-width: 140px;
+  }
+  
+  .dropdown-item,
+  .dropdown-balance {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .user-info-wrapper {
+    gap: 6px;
+  }
+  
+  .admin-badge {
+    font-size: 10px;
+    padding: 2px 8px;
   }
 }

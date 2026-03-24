@@ -5,7 +5,8 @@ import logo from '../../public/images/logo.png'
 import RegisterModal from './RegisterModal'
 import LoginModal from './LoginModal'
 import DepositModal from './DepositModal'
-import MyBookingsModal from './MyBookingsModal' // Новый компонент
+import MyBookingsModal from './MyBookingsModal'
+import AllBookingsModal from './AllBookingsModal'
 import '../styles/Header.css'
 import '../styles/global.css'
 
@@ -15,13 +16,16 @@ function Header() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false); // Новое состояние
+  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false);
+  const [isAllBookingsModalOpen, setIsAllBookingsModalOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   
   const { user, isAuthenticated, logout } = useAuth();
+  
+  const isAdmin = user?.role_id === 1;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -88,6 +92,12 @@ function Header() {
     setIsMyBookingsModalOpen(true);
   };
 
+  const handleAllBookingsClick = (e) => {
+    e.preventDefault();
+    setIsUserMenuOpen(false);
+    setIsAllBookingsModalOpen(true);
+  };
+
   return (
     <>
       <header className="header">
@@ -142,16 +152,34 @@ function Header() {
 
           {isAuthenticated ? (
             <div className="user-menu-container">
-              <button 
-                ref={buttonRef}
-                className="user-name-btn sansation-bold"
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              >
-                {user?.name || 'Пользователь'}
-              </button>
+              <div className="user-info-wrapper">
+                {isAdmin && <span className="admin-badge">Администратор</span>}
+                <button 
+                  ref={buttonRef}
+                  className="user-name-btn sansation-bold"
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                >
+                  {user?.name || 'Пользователь'}
+                </button>
+              </div>
               
               {isUserMenuOpen && (
                 <div className="user-dropdown" ref={menuRef}>
+                 
+                  {isAdmin && (
+                    <>
+                      <button 
+                        className="dropdown-item"
+                        onClick={handleAllBookingsClick}
+                        type="button"
+                      >
+                        Все брони
+                      </button>
+
+                      <div className="dropdown-divider"></div>
+                    </>
+                  )}
+                  
                   <button 
                     className="dropdown-item"
                     onClick={handleMyBookingsClick}
@@ -211,6 +239,11 @@ function Header() {
       <MyBookingsModal 
         isOpen={isMyBookingsModalOpen} 
         onClose={() => setIsMyBookingsModalOpen(false)}
+      />
+
+      <AllBookingsModal 
+        isOpen={isAllBookingsModalOpen} 
+        onClose={() => setIsAllBookingsModalOpen(false)}
       />
     </>
   )

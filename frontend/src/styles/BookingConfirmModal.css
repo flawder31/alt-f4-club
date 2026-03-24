@@ -156,8 +156,8 @@
 }
 
 .confirm-cancel-btn:hover {
-  border-color: var(--neon-blue);
-  color: var(--neon-blue);
+  background-color: var(--neon-blue);
+  color: var(--primary-color);
 }
 
 .confirm-submit-btn {
