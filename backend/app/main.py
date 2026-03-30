@@ -335,7 +335,7 @@ def get_current_user_info(
 @app.post("/auth/logout")
 def logout():
     """
-    Выход из системы (на стороне клиента нужно удалить токен)
+    Выход из системы
     """
     return {"message": "Выход выполнен успешно"}
 
@@ -552,41 +552,72 @@ def get_my_bookings(
     
     return {"bookings": bookings_list}
 
-@app.get("/my-bookings/nearest")
-def get_nearest_booking(
+@app.post("/bookings/{booking_id}/cancel", response_model=dict)
+def cancel_booking(
+    booking_id: int = Path(..., description="ID бронирования для отмены"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Получить ближайшую бронь текущего пользователя
+    Отменить свое бронирование
     """
-    update_expired_bookings(db)
+    try:
+        booking = db.query(Booking).filter(Booking.id == booking_id).first()
+        
+        if booking.user_id != current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Вы можете отменить только свои бронирования"
+            )
+        
+        active_status = db.query(Status).filter(Status.name == "Активно").first()
+        cancelled_status = db.query(Status).filter(Status.name == "Отменено").first()
+        
+        if not cancelled_status:
+            cancelled_status = Status(name="Отменено")
+            db.add(cancelled_status)
+            db.flush()
+        
+        if booking.status_id != active_status.id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Нельзя отменить бронирование со статусом '{booking.status.name}'"
+            )
+        
+        moscow_tz = pytz.timezone('Europe/Moscow')
+        current_time = datetime.now(moscow_tz)
+        
+        start_time = datetime.strptime(booking.start_time, '%Y-%m-%d %H:%M')
+        start_time = moscow_tz.localize(start_time)
+        
+        if current_time >= start_time:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Нельзя отменить уже начавшееся бронирование"
+            )
+        
+        refund_amount = booking.price
+        current_user.balance += refund_amount
 
-    moscow_tz = pytz.timezone('Europe/Moscow')
-    now = datetime.now(moscow_tz)
-    now_str = now.strftime('%Y-%m-%d %H:%M')
-
-    nearest_booking = db.query(Booking).filter(
-        Booking.user_id == current_user.id,
-        Booking.start_time >= now_str
-    ).order_by(
-        Booking.start_time.asc()
-    ).first()
-    
-    if not nearest_booking:
-        return {"message": "У вас пока нет броней"}
-    
-    start_time = datetime.strptime(nearest_booking.start_time, '%Y-%m-%d %H:%M')
-    end_time = datetime.strptime(nearest_booking.end_time, '%Y-%m-%d %H:%M')
-    
-    return {
-        "id": nearest_booking.id,
-        "seat_number": nearest_booking.seat.number if nearest_booking.seat else None,
-        "start_time": start_time.strftime('%d.%m.%Y %H:%M'),
-        "end_time": end_time.strftime('%d.%m.%Y %H:%M'),
-        "price": float(nearest_booking.price),
-        "status": nearest_booking.status.name if nearest_booking.status else "Неизвестно"
-    }
+        booking.status_id = cancelled_status.id
+        
+        db.commit()
+        
+        return {
+            "message": "Бронирование успешно отменено",
+            "booking_id": booking_id,
+            "status": "Отменено"
+        }
+        
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при отмене бронирования: {str(e)}"
+        )
 
 # Админские эндпоинты
 @app.get("/admin/bookings", response_model=List[AdminBookingResponse])
@@ -692,10 +723,115 @@ def complete_booking(
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Ошибка базы данных: {str(e)}")
 
+@app.put("/admin/bookings/{booking_id}/change-seat", response_model=dict)
+def change_seat(
+    booking_id: int = Path(..., description="ID бронирования"),
+    new_seat_id: int = None,
+    admin: User = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    """
+    Изменить место в бронировании
+    """
+    try:
+        
+        booking = db.query(Booking).filter(Booking.id == booking_id).first()
+        
+        if not booking:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Бронирование с id {booking_id} не найдено"
+            )
+        
+        active_status = db.query(Status).filter(Status.name == "Активно").first()
+        
+        if booking.status_id != active_status.id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Нельзя изменить место у бронирования со статусом '{booking.status.name}'"
+            )
+          
+        new_seat = db.query(Seat).filter(Seat.id == new_seat_id).first()
+        
+        if not new_seat:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Место с id {new_seat_id} не найдено"
+            )
+
+        old_seat = booking.seat
+        old_seat_id = old_seat.id
+        old_seat_number = old_seat.number
+        old_seat_type_id = old_seat.type.id
+        old_seat_type_name = old_seat.type.name
+        
+        if old_seat_type_id != new_seat.type.id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Нельзя изменить место на другой тип. "
+                       f"Текущий тип: '{old_seat_type_name}', новый тип: '{new_seat.type.name}'"
+            )
+
+        conflicting_booking = db.query(Booking).filter(
+            Booking.seat_id == new_seat_id,
+            Booking.status_id == active_status.id,
+            Booking.start_time < booking.end_time,
+            Booking.end_time > booking.start_time,
+            Booking.id != booking_id
+        ).first()
+        
+        if conflicting_booking:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Новое место уже занято в указанное время. "
+                       f"Конфликт с бронированием #{conflicting_booking.id}"
+            )
+        
+        booking.seat_id = new_seat_id
+        
+        db.commit()
+        
+        db.refresh(booking)
+        
+        response_data = {
+            "message": "Место в бронировании успешно изменено",
+            "booking_id": booking_id,
+            "old_seat": {
+                "id": old_seat_id,
+                "number": old_seat_number,
+                "type": {
+                    "id": old_seat_type_id,
+                    "name": old_seat_type_name
+                }
+            },
+            "new_seat": {
+                "id": new_seat.id,
+                "number": new_seat.number,
+                "type": {
+                    "id": new_seat.type.id,
+                    "name": new_seat.type.name
+                }
+            },
+            "start_time": str(booking.start_time),
+            "end_time": str(booking.end_time)
+        }
+        
+        return response_data
+        
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при смене места: {str(e)}"
+        )
+
 @app.get("/users", response_model=dict)
 def get_all_users(db: Session = Depends(get_db)):
     """
-    Возвращает всех пользователей (без паролей)
+    Возвращает всех пользователей
     """
     try:
         users = db.query(User).all()

@@ -68,7 +68,8 @@ INIT_SEATS = [
 
 INIT_STATUSES = [
     {"name": "Активно"},
-    {"name": "Завершено"},  
+    {"name": "Завершено"},
+    {"name": "Отменено"}  
 ]
 
 def init_database():
@@ -88,7 +89,6 @@ def init_database():
         if user_count == 0:
             users = []
             for user_data in INIT_USERS:
-                # Создаем копию и хешируем пароль
                 user_dict = user_data.copy()
                 user_dict["password"] = pwd_context.hash(user_data["password"])
                 users.append(User(**user_dict))
