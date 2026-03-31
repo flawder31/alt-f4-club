@@ -135,6 +135,22 @@ class AdminBookingResponse(BaseModel):
     price: int
     status: str
 
+class AdminDepositRequest(BaseModel):
+    user_phone: str
+    amount: int
+    
+    @validator('amount')
+    def validate_amount(cls, v):
+        if v <= 0:
+            raise ValueError('Сумма должна быть положительной')
+        return v
+
+class AdminDepositResponse(BaseModel):
+    user_phone: str
+    user_name: str
+    new_balance: int
+    amount_added: int
+
 def verify_password(plain_password, hashed_password):
     """Проверка пароля"""
     return pwd_context.verify(plain_password, hashed_password)
@@ -826,6 +842,45 @@ def change_seat(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Ошибка при смене места: {str(e)}"
+        )
+
+@app.post("/admin/balance/deposit", response_model=AdminDepositResponse)
+def admin_deposit_balance(
+    deposit: AdminDepositRequest,
+    admin: User = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    """
+    Пополнить баланс пользователя
+    """
+    try:
+        user = db.query(User).filter(User.phone == deposit.user_phone).first()
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Пользователь с номером телефона {deposit.user_phone} не найден"
+            )
+
+        user.balance += deposit.amount
+        
+        db.commit()
+        
+        return {
+            "user_phone": user.phone,
+            "user_name": user.name,
+            "new_balance": user.balance,
+            "amount_added": deposit.amount
+        }
+        
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при пополнении баланса: {str(e)}"
         )
 
 @app.get("/users", response_model=dict)
