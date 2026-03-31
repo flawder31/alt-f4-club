@@ -418,8 +418,10 @@ def get_available_seats(
         query = db.query(Seat)
         
         if start_time and end_time:
-            busy_bookings = db.query(Booking).filter(
+            active_status = db.query(Status).filter(Status.name == "Активно").first()
 
+            busy_bookings = db.query(Booking).filter(
+                Booking.status_id == active_status.id,
                 Booking.start_time < end_time,
                 Booking.end_time > start_time
             ).all()
