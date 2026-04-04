@@ -93,11 +93,13 @@ function AllBookingsModal({ isOpen, onClose }) {
   const getStatusInfo = (status) => {
     switch(status) {
       case 'Активно':
-        return { text: 'Активно', color: '#4caf50' }
+        return { text: 'Активно', color: '#4caf50' } 
       case 'Завершено':
         return { text: 'Завершено', color: '#9e9e9e' }
+      case 'Отменено':
+        return { text: 'Отменено', color: '#ff4d4d' }
       default:
-        return { text: status || 'Неизвестно', color: '#ff9800' }
+        return { text: status || 'Неизвестно', color: '#ff9800' } 
     }
   }
 
@@ -128,6 +130,7 @@ function AllBookingsModal({ isOpen, onClose }) {
     return bookings.filter(booking => {
       if (statusFilter === 'active') return booking.status === 'Активно'
       if (statusFilter === 'completed') return booking.status === 'Завершено'
+      if (statusFilter === 'cancelled') return booking.status === 'Отменено'
       return true
     })
   }
@@ -162,6 +165,12 @@ function AllBookingsModal({ isOpen, onClose }) {
           >
             Завершённые
           </button>
+          <button 
+            className={`filter-btn ${statusFilter === 'cancelled' ? 'active' : ''}`}
+            onClick={() => setStatusFilter('cancelled')}
+          >
+            Отменённые
+          </button>
         </div>
         
         {loading ? (
@@ -181,6 +190,7 @@ function AllBookingsModal({ isOpen, onClose }) {
               const displayNumber = index + 1
               const isCurrentlyActive = booking.status === 'Активно' && isBookingCurrentlyActive(booking.start_time, booking.end_time)
               const isCompleting = completingId === booking.id
+              const isCancelled = booking.status === 'Отменено'
               
               return (
                 <div key={booking.id} className="all-booking-item">
@@ -221,7 +231,7 @@ function AllBookingsModal({ isOpen, onClose }) {
                       <span className="detail-value price">{Math.round(booking.price)} ₽</span>
                     </div>
                     
-                    {isCurrentlyActive && (
+                    {isCurrentlyActive && !isCancelled && (
                       <div className="complete-booking-row">
                         <div className="complete-action">
                             <button 

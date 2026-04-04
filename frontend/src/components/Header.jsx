@@ -23,7 +23,7 @@ function Header() {
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, updateUser } = useAuth();
   
   const isAdmin = user?.role_id === 1;
 
@@ -235,6 +235,7 @@ function Header() {
       <MyBookingsModal 
         isOpen={isMyBookingsModalOpen} 
         onClose={() => setIsMyBookingsModalOpen(false)}
+        onBookingChange={updateUser}
       />
 
       <AllBookingsModal 

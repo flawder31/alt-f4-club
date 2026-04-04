@@ -318,11 +318,7 @@ function BookingPage() {
       <>
         <Header />
         <main className="booking-main">
-          <div className="booking-container">
-            <p className="auth-message sansation-regular">
-              Для бронирования необходимо авторизоваться
-            </p>
-          </div>
+          <div className="booking-container"></div>
         </main>
         <Footer />
         <LoginModal 

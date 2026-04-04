@@ -1,38 +1,42 @@
 import { useEffect, useState } from 'react'
 import api from '../api/auth'
+import { useAuth } from '../context/AuthContext'
 import '../styles/MyBookingsModal.css'
 
-function MyBookingsModal({ isOpen, onClose }) {
+function MyBookingsModal({ isOpen, onClose, onBookingChange }) {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [cancellingId, setCancellingId] = useState(null) 
+
+  const { updateUser } = useAuth()
+
+  const fetchBookings = async () => {
+    if (!isOpen) return
+    
+    setLoading(true)
+    setError('')
+    
+    try {
+      const response = await api.get('/my-bookings')
+      let activeBookings = response.data.bookings.filter(booking => {
+        return booking.status === 'Активно'
+      })
+      
+      activeBookings.sort((a, b) => {
+        return new Date(a.start_time) - new Date(b.start_time)
+      })
+      
+      setBookings(activeBookings)
+    } catch (err) {
+      console.error('Ошибка загрузки броней:', err)
+      setError('Не удалось загрузить список броней')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      if (!isOpen) return
-      
-      setLoading(true)
-      setError('')
-      
-      try {
-        const response = await api.get('/my-bookings')
-        let activeBookings = response.data.bookings.filter(booking => {
-          return booking.status === 'Активно'
-        })
-        
-        activeBookings.sort((a, b) => {
-          return new Date(a.start_time) - new Date(b.start_time)
-        })
-        
-        setBookings(activeBookings)
-      } catch (err) {
-        console.error('Ошибка загрузки броней:', err)
-        setError('Не удалось загрузить список броней')
-      } finally {
-        setLoading(false)
-      }
-    }
-    
     fetchBookings()
   }, [isOpen])
 
@@ -65,7 +69,6 @@ function MyBookingsModal({ isOpen, onClose }) {
     return time
   }
 
-  // Функция для получения цвета бейджа типа места
   const getSeatTypeColor = (seatType) => {
     switch(seatType) {
       case 'Vip':
@@ -77,7 +80,6 @@ function MyBookingsModal({ isOpen, onClose }) {
     }
   }
 
-  // Функция для получения названия типа места на русском
   const getSeatTypeName = (seatType) => {
     switch(seatType) {
       case 'Vip':
@@ -89,14 +91,24 @@ function MyBookingsModal({ isOpen, onClose }) {
     }
   }
 
-  const getStatusInfo = (status) => {
-    switch(status) {
-      case 'Активно':
-        return { text: 'Активно', color: '#4caf50' }
-      case 'Завершено':
-        return { text: 'Завершено', color: '#9e9e9e' }
-      default:
-        return { text: status || 'Неизвестно', color: '#ff9800' }
+  const handleCancelBooking = async (bookingId, bookingNumber) => {
+    if (!window.confirm(`Вы уверены, что хотите отменить бронь ${bookingNumber}?`)) return
+    
+    setCancellingId(bookingId)
+    try {
+      await api.post(`/bookings/${bookingId}/cancel`)     
+      await updateUser()
+      await fetchBookings()
+      
+      if (onBookingChange) {
+        onBookingChange()
+      }
+      
+    } catch (err) {
+      console.error('Ошибка при отмене брони:', err)
+      alert(err.response?.data?.detail || 'Ошибка при отмене бронирования')
+    } finally {
+      setCancellingId(null)
     }
   }
 
@@ -124,6 +136,7 @@ function MyBookingsModal({ isOpen, onClose }) {
               const displayNumber = index + 1
               const seatTypeColor = getSeatTypeColor(booking.seat_type)
               const seatTypeName = getSeatTypeName(booking.seat_type)
+              const isCancelling = cancellingId === booking.id
               
               return (
                 <div key={booking.id} className="booking-item">
@@ -152,6 +165,16 @@ function MyBookingsModal({ isOpen, onClose }) {
                     <div className="booking-detail-row">
                       <span className="detail-label">Стоимость:</span>
                       <span className="detail-value price">{Math.round(booking.price)} ₽</span>
+                    </div>
+                    
+                    <div className="cancel-booking-row">
+                      <button 
+                        className="cancel-booking-btn sansation-regular"
+                        onClick={() => handleCancelBooking(booking.id, displayNumber)}
+                        disabled={isCancelling}
+                      >
+                        {isCancelling ? 'Отмена...' : 'Отменить'}
+                      </button>
                     </div>
                   </div>
                   {index < bookings.length - 1 && <div className="booking-divider"></div>}
