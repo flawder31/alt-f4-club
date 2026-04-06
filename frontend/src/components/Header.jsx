@@ -7,6 +7,7 @@ import LoginModal from './LoginModal'
 import DepositModal from './DepositModal'
 import MyBookingsModal from './MyBookingsModal'
 import AllBookingsModal from './AllBookingsModal'
+import AllUsersModal from './AllUsersModal' 
 import '../styles/Header.css'
 import '../styles/global.css'
 
@@ -18,6 +19,7 @@ function Header() {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false);
   const [isAllBookingsModalOpen, setIsAllBookingsModalOpen] = useState(false);
+  const [isAllUsersModalOpen, setIsAllUsersModalOpen] = useState(false); 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const menuRef = useRef(null);
@@ -94,6 +96,12 @@ function Header() {
     setIsAllBookingsModalOpen(true);
   };
 
+  const handleAllUsersClick = (e) => {
+    e.preventDefault();
+    setIsUserMenuOpen(false);
+    setIsAllUsersModalOpen(true);
+  };
+
   return (
     <>
       <header className="header">
@@ -164,6 +172,16 @@ function Header() {
                  
                   {isAdmin && (
                     <>
+                      <button 
+                        className="dropdown-item"
+                        onClick={handleAllUsersClick}
+                        type="button"
+                      >
+                        Все пользователи
+                      </button>
+
+                      <div className="dropdown-divider"></div>
+
                       <button 
                         className="dropdown-item"
                         onClick={handleAllBookingsClick}
@@ -241,6 +259,11 @@ function Header() {
       <AllBookingsModal 
         isOpen={isAllBookingsModalOpen} 
         onClose={() => setIsAllBookingsModalOpen(false)}
+      />
+
+      <AllUsersModal 
+        isOpen={isAllUsersModalOpen} 
+        onClose={() => setIsAllUsersModalOpen(false)}
       />
     </>
   )
