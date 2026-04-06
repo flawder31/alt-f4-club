@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../api/auth'
 import '../styles/AllBookingsModal.css'
 
+// Импорт SVG иконки для смены места (замените путь на ваш)
+import changeSeatIcon from '../../public/images/exchange.svg'
+
 function AllBookingsModal({ isOpen, onClose }) {
+  const navigate = useNavigate()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
-  const [completingId, setCompletingId] = useState(null) 
+  const [completingId, setCompletingId] = useState(null)
+  const [changingSeatId, setChangingSeatId] = useState(null)
 
   const isBookingCurrentlyActive = (startTime, endTime) => {
     const now = new Date()
@@ -35,6 +41,29 @@ function AllBookingsModal({ isOpen, onClose }) {
     } finally {
       setCompletingId(null)
     }
+  }
+
+  // Функция для смены места
+  const handleChangeSeat = (booking) => {
+    // Проверяем, что бронь активна
+    if (booking.status !== 'Активно') return
+    
+    setChangingSeatId(booking.id)
+    
+    // Переходим на страницу выбора места с параметрами брони
+    navigate('/admin/change-seat', {
+      state: {
+        bookingId: booking.id,
+        currentSeatId: booking.seat_number,
+        currentSeatType: booking.seat_type,
+        date: booking.start_time.split(' ')[0],
+        startTime: booking.start_time.split(' ')[1],
+        endTime: booking.end_time.split(' ')[1]
+      }
+    })
+    
+    // Закрываем модальное окно
+    onClose()
   }
 
   useEffect(() => {
@@ -191,6 +220,7 @@ function AllBookingsModal({ isOpen, onClose }) {
               const isCurrentlyActive = booking.status === 'Активно' && isBookingCurrentlyActive(booking.start_time, booking.end_time)
               const isCompleting = completingId === booking.id
               const isCancelled = booking.status === 'Отменено'
+              const isActive = booking.status === 'Активно'
               
               return (
                 <div key={booking.id} className="all-booking-item">
@@ -211,6 +241,16 @@ function AllBookingsModal({ isOpen, onClose }) {
                     <div className="all-booking-detail-row">
                       <span className="detail-label">Место:</span>
                       <span className="detail-value">
+                        {/* Кнопка смены места (только для активных броней) */}
+                        {isActive && (
+                          <button 
+                            className="change-seat-btn"
+                            onClick={() => handleChangeSeat(booking)}
+                            title="Сменить место"
+                          >
+                            <img src={changeSeatIcon} alt="Сменить место" className="change-seat-icon" />
+                          </button>
+                        )}
                         №{booking.seat_number}
                         <span 
                           className="seat-type-badge"

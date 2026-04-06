@@ -164,7 +164,6 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 2px;
   flex-wrap: wrap;
 }
 
@@ -262,6 +261,29 @@
 .all-bookings-close-btn:hover {
   background-color: var(--neon-blue);
   color: var(--primary-color);
+}
+
+.change-seat-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  vertical-align: middle;
+}
+
+.change-seat-btn:hover {
+  transform: scale(1.1);
+}
+
+.change-seat-icon {
+  width: 20px;
+  height: 20px;
+  transition: filter 0.2s ease;
 }
 
 @keyframes fadeIn {
